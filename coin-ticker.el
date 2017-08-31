@@ -31,6 +31,7 @@
 ;;; Code:
 
 (require 'json)
+(require 'subr-x)
 (require 'request)
 
 (defgroup coin-ticker nil
@@ -74,6 +75,10 @@
   "The symbol to show for the price."
   :group 'coin-ticker)
 
+(defcustom coin-ticker-price-decimals nil
+  "Number of decimals to show in price after conversion (nil for all)."
+  :group 'coin-ticker)
+
 
 ;;; Internal variables
 
@@ -108,9 +113,13 @@
 
 (defun coin-ticker-price-fmt (sym price)
   "Format SYM so that its PRICE is shown."
-  (if coin-ticker-show-syms
-      (format "%s %s%s" sym coin-ticker-price-symbol price)
-    (format "%s%s" coin-ticker-price-symbol price)))
+  (let ((price (if coin-ticker-price-decimals
+                   (format (format "%%.%df" coin-ticker-price-decimals)
+                           (string-to-number price))
+                 price)))
+    (if coin-ticker-show-syms
+        (format "%s %s%s" sym coin-ticker-price-symbol price)
+      (format "%s%s" coin-ticker-price-symbol price))))
 
 (defun coin-ticker-modeline-update (prices)
   "Update the modeline with a PRICES dictionary."

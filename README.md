@@ -38,6 +38,9 @@ Your Emacs config should have some code like this:
 ;; Optional: Set the symbol used to display prices (default is "$")
 (setq coin-ticker-price-symbol "€")
 
+;; Optional: Set the number of decimals to display in price (default is all)
+(setq coin-ticker-price-decimals 2)
+
 ;; Enable coin-ticker-mode
 (coin-ticker-mode 1)
 ```
